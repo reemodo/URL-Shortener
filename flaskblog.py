@@ -1,10 +1,12 @@
-from flask import Flask
+from flask import Flask,request
 
 app = Flask(__name__)
 
 
-@app.route('/home')
+@app.route('/',methods=['POST','GET')
 def hello():
+    if request.method == "POST" :
+        return true
     return '<h1>home  page<h1>'
 
 @app.route('/about')
