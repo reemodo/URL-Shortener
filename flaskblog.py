@@ -1,11 +1,13 @@
-from flask import Flask,request
+from flask import Flask, request ,render_template
 app = Flask(__name__)
 
 @app.route('/',methods=['POST','GET'])
 def hello():
     if request.method == "POST" :
-        return true
-    return '<h1>home  page<h1>'
+        urlname = request.form["nm"]
+        return urlname
+    else :
+        return render_template('MainHtml.html')
 
 @app.route('/about')
 def about():
