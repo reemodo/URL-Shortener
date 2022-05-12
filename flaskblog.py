@@ -1,18 +1,21 @@
 
-from flask import Flask, request ,render_template
+
+from flask import Flask, request ,render_template 
 from pymongo import MongoClient
+import database.db 
 
-cluster = "mongodb+srv://Reem:d0vniEkL7wMyD1X4@cluster0.jaez9.mongodb.net/ShortenerUrl_DB?retryWrites=true&w=majority"
-client = MongoClient(cluster)
-
-print(client.list_database_names())
-db= client.test
+mydb = database.db.iniDB()
 app = Flask(__name__)
-@app.python 
+@app.route('/',methods=['POST','GET'])
 def hello():
     if request.method == "POST" :
-        urlname = request.form["nm"]
-        return urlname
+        urlLogn = request.form["urlLogn"]
+        if urlLogn == '' :
+            shortURL = "http://127.0.0.1:5000/" + "short"
+            mycol= mydb.Usrers
+            mydict = { "name": "shortURL", "address": "Highway 37" }
+            x = mycol.insert_one(mydict)
+            return (x.inserted_id)
     else :
         return render_template('MainHtml.html')
 
