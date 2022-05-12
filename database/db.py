@@ -1,6 +1,6 @@
-from flask_mongoengine import MongoEngine
+from pymongo import MongoClient
 
-db = MongoEngine()
-
-def initialize_db(app):
-    db.init_app(app)
+cluster = "localhost:27017"
+client = MongoClient(cluster)
+db = client.test
+print(client.list_database_names())
