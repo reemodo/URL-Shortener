@@ -1,10 +1,12 @@
-from pymongo import MongoClient
+
+import mongoengine 
 
 class db(object):
-    url = "localhost:27017"
+    url = "shortenerURL"
     database = None
+    
     def initialize():
-        client = MongoClient(db.url)
+        client = mongoengine.connect(db.url)
         db.database = client.shortenerURL
 
     def insert (collection , data):
@@ -15,10 +17,10 @@ class db(object):
 
     def find_one (collection , query):
         return db.database.collection.find_one(query)
-
-db.initialize()
-print(db.database.list_collection_names())
-
+    def count(collection):
+        return db.database.collection.count()
+        
+        
 #mycol= db.Usrers
 #mydict = user( "name", "address","email" )
 #x = mycol.insert_one(mydict)
