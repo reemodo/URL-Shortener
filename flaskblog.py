@@ -14,18 +14,6 @@ def idToShortURL(id):
 
 
 
-
-def shortURLToId(shortURL):
-    id = 0
-    for i in shortURL:
-        val_i = ord(i)
-        if(val_i >= ord('a') and val_i <= ord('z')):
-            id = id*62 + val_i - ord('a')
-        elif(val_i >= ord('A') and val_i <= ord('Z')):
-            id = id*62 + val_i - ord('Z') + 26
-        else:
-            id = id*62 + val_i - ord('0') + 52
-    return id
 @app.route('/',methods=['POST','GET'])
 def main():
     if request.method == "POST" :
@@ -33,7 +21,7 @@ def main():
         dbContainURL = url.objects(originalURL = insertedURL).first()
         if dbContainURL == None:
             urlone=url()
-            shortenerURL =   idToShortURL(urlone.objectId().str )
+            shortenerURL =   idToShortURL(insertedURL )
             urlone.originalURL =insertedURL
             urlone.shortURL =shortenerURL
             urlone.save()
