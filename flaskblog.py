@@ -5,13 +5,16 @@ from flask import Flask, flash , redirect, request ,render_template
 from database.db import db
 from database.url import url
 import string
+import hashlib , base64
 db.initialize()
 app = Flask(__name__)
 
 
-def generate_short_id(num_of_chars): 
-    return ''.join(choice(string.ascii_letters+string.digits) for _ in range(num_of_chars))
-
+def generate_short_id(longURL): 
+    hashresult = hashlib.md5(longURL.encode())
+    bytes = base64.b64encode(hashresult.digest()[0:6])
+    return bytes.decode('utf-8')
+  
 
 @app.route('/',methods=['POST','GET'])
 def main():
@@ -30,7 +33,7 @@ def main():
 
         if dbContainURL == None:
             if not short_id:
-                short_id = generate_short_id(8)
+                short_id = generate_short_id(insertedURL)
             urlone=url()
             urlone.originalURL = insertedURL
             urlone.shortURL = request.host_url+short_id
