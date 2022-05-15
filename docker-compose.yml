@@ -9,7 +9,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - .:/flaskblog
+      - .:/app
     depends_on:
       - mongodb
     environment:
@@ -25,8 +25,8 @@ services:
       - MONGO_INITDB_DATABSE=phase-services
       - MONGO_INITDB_ROOT_USERNAME=phase-services
       - MONGO_INITDB_ROOT_PASSWORD=phase-services
-     
-   
+    volumes:
+    - mongodb-data
     ports: 
      - 27017:27017
     

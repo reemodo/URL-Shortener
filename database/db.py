@@ -6,8 +6,10 @@ from pymongo  import MongoClient
 from os import getenv
 
 def initialize():
-    database =mongoengine.connect('mongodb',username=getenv('MONGO_INITDB_ROOT_USERNAME'),password=getenv('MONGO_INITDB_ROOT_PASSWORD'))    
-    return database
+     mongoengine.connect(name='db', alias='core',
+                            username=getenv('MONGO_INITDB_ROOT_USERNAME'),
+                            password=getenv('MONGO_INITDB_ROOT_PASSWORD'))
+
   
         
         

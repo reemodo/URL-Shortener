@@ -8,7 +8,7 @@ class url (mongoengine.Document):
     shortURL = mongoengine.StringField(max_length=30,unique = True, required = True)
     creationDate = mongoengine.DateTimeField(default = datetime.datetime.now)
     meta={
-
+          'db_alias' : 'core',
           'collection' : 'url'
     }
     
