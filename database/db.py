@@ -15,7 +15,3 @@ def initialize():
   
         
         
-#mycol= db.Usrers
-#mydict = user( "name", "address","email" )
-#x = mycol.insert_one(mydict)
-#print (x.inserted_id)
