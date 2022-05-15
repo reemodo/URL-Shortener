@@ -10,6 +10,7 @@ import mongoengine
 from pymongo import MongoClient
 import string
 import random 
+
 app = Flask(__name__)
 
 
@@ -18,58 +19,59 @@ def generate_short_id(longURL):
     bytes = base64.b32encode(hashresult.digest())
     return bytes.decode('utf-8')
 
-@app.route('/') 
-def index():
-    return render_template('MainHtml.html')
 
 @app.route('/',methods=['POST','GET'])
 def main():
     db=""
-    try:
-        db = database.initialize()
-        mongoengine.connect(db.name , alias='core')
-        if request.method == "POST" :
-            insertedURL = request.form["url"]
-            if not insertedURL:
-                # i used short_url as error massege becuse of flash is not working
-                return render_template('MainHtml.html',short_url ="The URL is required!")
+  
+    db = database.initialize()
+    mongoengine.connect(db.name , alias='core')
+    if request.method == "POST" :
+        insertedURL = request.form["urls"]
+        if not insertedURL:
+            # i used short_url as error massege becuse of flash is not working
+            return render_template('MainHtml.html',short_url ="The URL is required!")
+        
+        custom_id = request.form['custom_id']
+        dbContainURL = url.objects(originalURL = insertedURL).first()
+        if dbContainURL is not None: 
+            return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
             
-            custom_id = request.form['custom_id']
-            dbContainURL = url.objects(originalURL = insertedURL).first()
-            if dbContainURL is not None: 
-                return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
-             
-            
-            if custom_id is not None:
-                dbContainshortID = url.objects(shortURL = custom_id).first()
-                if dbContainshortID is not None:
-                    # i used short_url as error massege becuse of flash is not working 
-                    #flash('Please enter different custom id!')
-                    print('hello')
-                    return render_template('MainHtml.html',short_url ='Please enter different custom id!')
+        
+        if  not custom_id :
+            print('hello')      
+            custom_id = generate_short_id(insertedURL)[0:5]
+            dbContainshortIDs = url.objects(shortURL = custom_id).first()
 
-                else:
-                    custom_id = generate_short_id(insertedURL)
-                    dbContainshortIDs = url.objects(shortURL = custom_id).first()[0:5]
+            while dbContainshortIDs :
+                custom_id =generate_short_id(custom_id+datetime.now)[0:5]
+                dbContainshortIDs = url.objects(shortURL = custom_id).first()
 
-                    while dbContainshortIDs :
-                        custom_id =generate_short_id(custom_id+datetime.now)[0:5]
-                        dbContainshortIDs = url.objects(shortURL = custom_id).first()
-                        
+        else : 
+            dbContainshortID = url.objects(shortURL = custom_id).first()
+            if dbContainshortID is not None:
+                # i used short_url as error massege becuse of flash is not working 
+                #flash('Please enter different custom id!')
+                print('hello')
+                return render_template('MainHtml.html',short_url ='Please enter different custom id! or leave it empty')
+
+            else:
                 urlone=url()
                 urlone.originalURL = insertedURL
                 urlone.shortURL = custom_id
                 urlone.save()
-                return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
+                return render_template('MainHtml.html',short_url = request.host_url+custom_id) 
+               
+        urlone=url()
+        urlone.originalURL = insertedURL
+        urlone.shortURL = custom_id
+        urlone.save()
+        return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
             
-            
-        else :
-            return render_template('MainHtml.html')
-    except:
-        pass
-    finally:
-        if type(db)==MongoClient:
-            db.close()
+        
+    else :
+        return render_template('MainHtml.html')
+   
 
 @app.route('/<short_id>')
 def redirects(short_id):
