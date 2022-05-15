@@ -7,7 +7,7 @@ To run this example, clone the repository then run:
 
 and then run :
 
-   python flaskblog.py
+   python app.py
    
 In order to register an URL for shortening, you must take the created URL in your terminal and paste it in you web appliction.
 
