@@ -7,26 +7,22 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 8000:8000
+      - 5002:5002
     volumes:
       - .:/app
-    depends_on:
+    links:
       - mongodb
-    environment:
-      - REDIRECT_ADMIN_PASSWORD=phase-services
-      - MONGO_INITDB_DATABSE=phase-services
-      - MONGO_INITDB_ROOT_USERNAME=phase-services
-      - MONGO_INITDB_ROOT_PASSWORD=phase-services
 
   mongodb:
     image: mongo:latest
     container_name: mongodb
+    hostname: localhost
     environment:
-      - MONGO_INITDB_DATABSE=phase-services
-      - MONGO_INITDB_ROOT_USERNAME=phase-services
-      - MONGO_INITDB_ROOT_PASSWORD=phase-services
+      - MONGO_INITDB_DATABSE=urlshortener
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=pass
     volumes:
-    - mongodb-data
+    - ./init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
     ports: 
      - 27017:27017
     

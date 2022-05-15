@@ -1,15 +1,17 @@
 
-from ast import alias
-from sqlite3 import connect
 import mongoengine 
 from pymongo  import MongoClient
 from os import getenv
 
 def initialize():
-     mongoengine.connect(name='db', alias='core',
-                            username=getenv('MONGO_INITDB_ROOT_USERNAME'),
-                            password=getenv('MONGO_INITDB_ROOT_PASSWORD'))
-
+     client =MongoClient('db',
+                         username='root', 
+                         password='pass',
+                         authSource="admin")
+     return client['urlshortener']
+     
+     
+   
   
         
         
