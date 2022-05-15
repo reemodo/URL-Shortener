@@ -22,15 +22,13 @@ def generate_short_id(longURL):
 def index():
     return render_template('MainHtml.html')
 
-@app.route('/main',methods=['POST','GET'])
+@app.route('/',methods=['POST','GET'])
 def main():
     db=""
     try:
         db = database.initialize()
         mongoengine.connect(db.name , alias='core')
         if request.method == "POST" :
-            
-
             insertedURL = request.form["url"]
             if not insertedURL:
                 # i used short_url as error massege becuse of flash is not working
@@ -43,9 +41,7 @@ def main():
              
             
             if custom_id is not None:
-                print('hello')
                 dbContainshortID = url.objects(shortURL = custom_id).first()
-                print('hello')
                 if dbContainshortID is not None:
                     # i used short_url as error massege becuse of flash is not working 
                     #flash('Please enter different custom id!')
@@ -60,15 +56,11 @@ def main():
                         custom_id =generate_short_id(custom_id+datetime.now)[0:5]
                         dbContainshortIDs = url.objects(shortURL = custom_id).first()
                         
-                    urlone=url()
-                    urlone.originalURL = insertedURL
-                    urlone.shortURL = custom_id
-                    urlone.save()
-                    return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
-            else :
-                
-                return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
-                
+                urlone=url()
+                urlone.originalURL = insertedURL
+                urlone.shortURL = custom_id
+                urlone.save()
+                return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
             
             
         else :
