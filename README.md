@@ -1,7 +1,11 @@
 # URL-Shortener
-Simple URL Shortener coded with Flask, using MongoDB for storage.
+Simple URL Shortener coded with Flask, using MongoDB for storage by the following command:
 
-To run this example, clone the repository then run:
+    git clone https://github.com/reemodo/URL-Shortener
+
+To run this example, enter the derictory of repository and then run :
+    
+    cd URL-Shortener
 
     python -m pip install -r requirements.txt 
 
