@@ -7,4 +7,4 @@ class User(mongoengine.Document):
     email = mongoengine.StringField(unique = True, required = True)
     userID = mongoengine.FloatField(required = False)
     creationDate = mongoengine.DateTimeField(default = datetime.datetime.now)
-    meta = { 'collection' : 'Usrers'}
+   

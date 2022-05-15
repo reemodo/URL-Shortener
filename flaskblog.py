@@ -1,12 +1,14 @@
 
 
-from random import choice
+
 from flask import Flask, flash , redirect, request ,render_template 
-from database.db import db
+import database.db as database
 from database.url import url
 import hashlib , base64
 
-db.initialize()
+
+database.initialize()
+print(database)
 app = Flask(__name__)
 
 
@@ -20,6 +22,7 @@ def generate_short_id(longURL):
 def main():
     if request.method == "POST" :
         insertedURL = request.form["url"]
+        print(database)
         if not insertedURL:
             flash('The URL is required!')
             return render_template('MainHtml.html')
@@ -59,4 +62,4 @@ def redirects(short_id):
         return '<h1>not valid short url<h1>'
 
 if __name__ == '__main__' :
-    app.run(debug = True)
+    app.run(host='0.0.0.0', port=8000)
