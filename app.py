@@ -1,14 +1,15 @@
 
 
 
-from flask import Flask, flash , redirect, request ,render_template 
+from datetime import datetime
+from flask import Flask, flash , redirect, request ,render_template, url_for 
 import database.db as database
 import hashlib , base64
 from database.url import url
 import mongoengine
 from pymongo import MongoClient
-
-
+import string
+import random 
 app = Flask(__name__)
 
 
@@ -16,9 +17,12 @@ def generate_short_id(longURL):
     hashresult = hashlib.md5(longURL.encode())
     bytes = base64.b32encode(hashresult.digest()[0:5])
     return bytes.decode('utf-8')
-  
+@app.route('/') 
+def index():
+    print('hello')
+    return render_template('MainHtml.html')
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/main',methods=['POST','GET'])
 def main():
     db=""
     try:
@@ -27,26 +31,37 @@ def main():
         if request.method == "POST" :
             insertedURL = request.form["url"]
             if not insertedURL:
-                flash('The URL is required!')
-                return render_template('MainHtml.html')
+                flash("The URL is required!")
+                return redirect(request.url)
             
             short_id = request.form['custom_id']
             dbContainURL = url.objects(originalURL = insertedURL).first()
+            if dbContainURL is not None:
+                return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
+             
+            
+            if short_id is not None:
+                print('hello')
+                dbContainshortID = url.objects(shortURL = short_id).first()
+                print('hello')
+                if dbContainshortID is not None:
+                    print('hello')
+                    flash('Please enter different custom id!')
+                    print('hello')
+                    return redirect(url_for('index'))
 
-            if short_id and dbContainURL is not None:
-                flash('Please enter different custom id!')
-                return render_template('MainHtml.html')
-
-            if dbContainURL == None:
-                if not short_id:
+                else:
                     short_id = generate_short_id(insertedURL)
-                urlone=url()
-                urlone.originalURL = insertedURL
-                urlone.shortURL = short_id
-                urlone.save()
-                
-
-                return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
+                    dbContainshortIDs = url.objects(shortURL = short_id).first()
+                    while dbContainshortIDs :
+                        short_id =generate_short_id(short_id+datetime.now)
+                        dbContainshortIDs = url.objects(shortURL = short_id).first()
+                        
+                    urlone=url()
+                    urlone.originalURL = insertedURL
+                    urlone.shortURL = short_id
+                    urlone.save()
+                    return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
             else :
                 
                 return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
