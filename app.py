@@ -11,7 +11,10 @@ from pymongo import MongoClient
 import string
 import os 
 
+
 app = Flask(__name__)
+
+mongoengine.connect('urlshortener', host="mongodb://mongodb/dev" ,alias='core')
 
 SECRET_KEY = os.urandom(24)
 def generate_short_id(longURL): 
@@ -20,13 +23,10 @@ def generate_short_id(longURL):
     return bytes.decode('utf-8')
 
 
-@app.route('/',methods=['POST'])
+@app.route('/',methods=['POST','GET'])
 def main():
-    db = MongoClient('db',
-                         username='root', 
-                         password='pass',
-                         authSource="admin")['urlshortener']
-    mongoengine.connect(db.name , alias='core')
+   
+  
     if request.method == "POST" :
         insertedURL = request.form["urls"]
         if not insertedURL:
