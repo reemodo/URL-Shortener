@@ -9,22 +9,23 @@ from database.url import url
 import mongoengine
 from pymongo import MongoClient
 import string
-import random 
+import os 
 
 app = Flask(__name__)
 
-
+SECRET_KEY = os.urandom(24)
 def generate_short_id(longURL): 
     hashresult = hashlib.md5(longURL.encode())
     bytes = base64.b32encode(hashresult.digest())
     return bytes.decode('utf-8')
 
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/',methods=['POST'])
 def main():
-    db=""
-  
-    db = database.initialize()
+    db = MongoClient('db',
+                         username='root', 
+                         password='pass',
+                         authSource="admin")['urlshortener']
     mongoengine.connect(db.name , alias='core')
     if request.method == "POST" :
         insertedURL = request.form["urls"]
@@ -51,7 +52,7 @@ def main():
             dbContainshortID = url.objects(shortURL = custom_id).first()
             if dbContainshortID is not None:
                 # i used short_url as error massege becuse of flash is not working 
-                #flash('Please enter different custom id!')
+                flash('Please enter different custom id!')
                 print('hello')
                 return render_template('MainHtml.html',short_url ='Please enter different custom id! or leave it empty')
 
@@ -82,4 +83,4 @@ def redirects(short_id):
         return '<h1>not valid short url<h1>'
 
 if __name__ == '__main__' :
-    app.run(host='0.0.0.0', port=5002 , debug=True)
+    app.run(host='0.0.0.0', port=5000 , debug=True)
