@@ -1,24 +1,26 @@
 # URL-Shortener
-Simple URL Shortener coded with Flask, using MongoDB for storage by the following command:
+Simple URL Shortener coded with Flask, using MongoDB for storage. 
 
-    git clone https://github.com/reemodo/URL-Shortener
+Download the docker by following the steps on this site
 
-To run this example, enter the derictory of repository and then run :
-    
-    cd URL-Shortener
-
-    python -m pip install -r requirements.txt 
-
-and then run :
-
-
-    python app.py
+     https://docs.docker.com/get-docker/
    
-   
-In order to register an URL for shortening, you must take the created URL in your terminal and paste it in you web appliction.
+clone the repository by the following command:
 
-For example http://127.0.0.1:5002
+     git clone https://github.com/reemodo/URL-Shortener
+
+To run this example, enter the directory of the repository and then run docker-compose with the following commands:
+   
+     cd URL-Shortener
+
+     Docker-compose up 
+
+and then open your browser and type the following URL or open the browser from the container in the docker desktop :
+
+
+     http://localhost:5000
+  
 
 It is now time to visit your newly created shortened URL by visiting the path provided in the response. For example:
 
-URL created for https://stackoverflow.com/questions/55977356 is http://127.0.0.1:5002/FM374NS7
+The URL created for https://stackoverflow.com/questions/55977356 is http://localhost:5000/S2BBB
