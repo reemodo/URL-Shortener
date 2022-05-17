@@ -20,7 +20,7 @@ def generate_short_id(longURL):
     return bytes.decode('utf-8')
 
 
-@app.route('/',methods=['POST'])
+@app.route('/',methods=['POST','GET'])
 def main():
     if request.method == "POST" :
         insertedURL = request.form["urls"]
@@ -65,16 +65,19 @@ def main():
         urlone.save()
         return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
             
-        
+    elif request.method == "GET" :
+        return render_template('MainHtml.html')
+
    
 
-@app.route('/<short_id>')
+@app.route('/<short_id>',methods=['GET'])
 def redirects(short_id):
-    urlexist = url.objects(shortURL = short_id).first()
-    if urlexist :
-        return redirect(urlexist.originalURL)
-    else :
-        return '<h1>not valid short url<h1>'
+    if request.method == "GET" :
+        urlexist = url.objects(shortURL = short_id).first()
+        if urlexist :
+            return redirect(urlexist.originalURL)
+        else :
+            return '<h1>not valid short url<h1>'
 
 if __name__ == '__main__' :
     app.run(host='0.0.0.0', port=5000 , debug=True)
