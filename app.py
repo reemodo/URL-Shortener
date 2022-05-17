@@ -6,17 +6,14 @@ from flask import Flask, flash , redirect, request ,render_template, url_for
 import database.db as database
 import hashlib , base64
 from database.url import url
-import mongoengine
-from pymongo import MongoClient
-import string
-import os 
+
 
 
 app = Flask(__name__)
+database.initialize()
 
-mongoengine.connect('urlshortener', host="mongodb://mongodb/dev" ,alias='core')
 
-SECRET_KEY = os.urandom(24)
+
 def generate_short_id(longURL): 
     hashresult = hashlib.md5(longURL.encode())
     bytes = base64.b32encode(hashresult.digest())
@@ -52,8 +49,7 @@ def main():
             dbContainshortID = url.objects(shortURL = custom_id).first()
             if dbContainshortID is not None:
                 # i used short_url as error massege becuse of flash is not working 
-                flash('Please enter different custom id!')
-                print('hello')
+                #flash('Please enter different custom id!')
                 return render_template('MainHtml.html',short_url ='Please enter different custom id! or leave it empty')
 
             else:
@@ -70,8 +66,6 @@ def main():
         return render_template('MainHtml.html',short_url = request.host_url+urlone.shortURL)
             
         
-    else :
-        return render_template('MainHtml.html')
    
 
 @app.route('/<short_id>')
