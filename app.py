@@ -22,16 +22,16 @@ def generate_short_id(longURL):
 
 @app.route('/',methods=['POST'])
 def main():
-   
-  
     if request.method == "POST" :
         insertedURL = request.form["urls"]
+
         if not insertedURL:
             # i used short_url as error massege becuse of flash is not working
             return render_template('MainHtml.html',short_url ="The URL is required!")
         
         custom_id = request.form['custom_id']
         dbContainURL = url.objects(originalURL = insertedURL).first()
+        
         if dbContainURL is not None: 
             return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
             
@@ -47,6 +47,7 @@ def main():
 
         else : 
             dbContainshortID = url.objects(shortURL = custom_id).first()
+
             if dbContainshortID is not None:
                 # i used short_url as error massege becuse of flash is not working 
                 #flash('Please enter different custom id!')
