@@ -31,13 +31,12 @@ def main():
         
         custom_id = request.form['custom_id']
         dbContainURL = url.objects(originalURL = insertedURL).first()
-        
+
         if dbContainURL is not None: 
             return render_template('MainHtml.html',short_url =request.host_url+dbContainURL.shortURL)
             
         
-        if  not custom_id :
-            print('hello')      
+        if  not custom_id :    
             custom_id = generate_short_id(insertedURL)[0:5]
             dbContainshortIDs = url.objects(shortURL = custom_id).first()
 
