@@ -20,7 +20,7 @@ def generate_short_id(longURL):
     return bytes.decode('utf-8')
 
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/',methods=['POST'])
 def main():
    
   
@@ -42,7 +42,7 @@ def main():
             dbContainshortIDs = url.objects(shortURL = custom_id).first()
 
             while dbContainshortIDs :
-                custom_id =generate_short_id(custom_id+datetime.now)[0:5]
+                custom_id =generate_short_id(custom_id+datetime.now())[0:5]
                 dbContainshortIDs = url.objects(shortURL = custom_id).first()
 
         else : 
